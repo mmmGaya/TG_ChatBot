@@ -11,11 +11,11 @@ def get_schedule(group_number):
         if sheet_name.startswith('Пара'):
             sheet = workbook[sheet_name]
             for row in sheet.iter_rows(min_row=2, values_only=True):
-                if row[3] == group_number:  # Предполагаем, что номер группы находится в 4-м столбце (индекс 3)
+                if row[1] == group_number or row[4] == group_number:  # Предполагаем, что номер группы находится в 4-м столбце (индекс 3)
                     schedule.append({
                         'Пара': sheet_name,
-                        'Аудитория': row[1],  # Предполагаем, что номер аудитории во 2-м столбце (индекс 1)
-                        'Преподаватель': row[2]  # Предполагаем, что имя преподавателя в 3-м столбце (индекс 2)
+                        'Аудитория': [row[0], row[3]],  # Предполагаем, что номер аудитории во 2-м столбце (индекс 1)
+                        'Преподаватель': [row[2], row[5]]  # Предполагаем, что имя преподавателя в 3-м столбце (индекс 2)
                     })
     return schedule
 
