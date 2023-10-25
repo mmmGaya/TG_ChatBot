@@ -12,7 +12,7 @@ dp = Dispatcher(bot)
 
 # -----Connect to DB--------
 create_db.connect_to_database()
-create_db.create_table()
+
 
 
 
