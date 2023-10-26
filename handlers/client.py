@@ -7,10 +7,11 @@ from create_bot import dp, bot
 from aiogram.dispatcher.filters import Text
 import schedule
 import re
+from keyboards import kb_client 
 
 
 async def command_start(message : types.Message):
-    await bot.send_message(message.from_user.id, f'Привет, Я бот-координатор РУКСИ. Я знаю о РКСИ все ну или почти всё. Чтобы в этом убедится задай мне вопрос ^.^ ')
+    await bot.send_message(message.from_user.id, f'Привет, Я бот-координатор РУКСИ. Я знаю о РКСИ все ну или почти всё. Чтобы в этом убедиться задай мне вопрос ^.^ ', reply_markup=kb_client)
 
 
 class FSMClient(StatesGroup):
