@@ -13,7 +13,28 @@ def get_group_schedule(group):
     rasp_lst = [str(i) for i in rasp_lst]
 
     lst = [i.get_text() for i in soup.find_all(['p', 'b'])[2:-1]]
+    
+    result = separation_text(lst=lst, rasp_lst=rasp_lst)
+    return result
 
+
+def get_teacher_schedule(teacher):
+    url = 'https://rksi.ru/schedule'
+
+    r_post = requests.post(url, {'teacher': teacher, "stp": "Показать!"})
+    soup = BeautifulSoup(r_post.text, features="lxml")
+
+    rasp_row = soup.find('main')
+    rasp_lst = rasp_row.find_all(['p', 'hr'])[2:]
+    rasp_lst = [str(i) for i in rasp_lst]
+
+    lst = [i.get_text() for i in soup.find_all(['p', 'b'])[2:-1]]
+
+    result = separation_text(lst=lst, rasp_lst=rasp_lst)
+    return result
+
+
+def separation_text(lst, rasp_lst):
     # нахождение и удаление даты из списка
     words_to_check = ['понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота']
     date_lst = [item for item in lst if any(word in item for word in words_to_check)]
@@ -35,11 +56,11 @@ def get_group_schedule(group):
             for pattern in patterns:
                 match = pattern.search(item)
                 if match:
-                    start_time, end_time, subject, teacher, classroom = match.groups()
+                    start_time, end_time, subject, people, classroom = match.groups()
                     day_schedule.append({
                         'Время': f"{start_time} — {end_time}",
                         'Предмет': subject,
-                        'Преподаватель': teacher,
+                        'Общность': people,
                         'Аудитория': classroom
                     })
                     matched = True
@@ -50,8 +71,10 @@ def get_group_schedule(group):
         result.append(day_schedule)
     return result
 
-# Пример использования функции для получения расписания группы 'ИС-34'
-group_schedule = get_group_schedule('ИС-34')
+
+
+# Пример использования функции для получения расписания группы
+group_schedule = get_group_schedule(input('Введите номер группы: '))
 for day_schedule in group_schedule:
     print('—' * 10)
     print('📅', day_schedule[0])
@@ -64,11 +87,15 @@ for day_schedule in group_schedule:
         print(f"🔑: {lesson['Аудитория']}", '\n')
 
 
-# teachers = soup_rksi.find('select', id = 'teacher').find_all('option')
-# teachers_list = []
-# for i in teachers:
-#   teachers_list.append(i.text)
-# teachers_list
-# r_post = requests.post(url, {'teacher': 'Барна Н.В.', "stp": "Показать!"})
-# soup = BeautifulSoup(r_post.text, features="lxml")
-# [i.get_text() for i in soup.find_all(['p','b'])[2:-1]]
+# Пример использования функции для получения расписания преподавателя (Каламбет В.Б.)
+group_schedule = get_teacher_schedule(input('Введите ФИО преподавателя: '))
+for day_schedule in group_schedule:
+    print('—' * 10)
+    print('📅', day_schedule[0])
+    print('—' * 10)
+
+    for lesson in day_schedule[1:]:
+        print(f"⏳: {lesson['Время']}")
+        print(f"📒: {lesson['Предмет']}")
+        print(f"🎓: {lesson['Общность']}")
+        print(f"🔑: {lesson['Аудитория']}", '\n')
