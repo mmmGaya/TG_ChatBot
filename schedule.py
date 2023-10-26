@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 def get_group_schedule(group):
     url = 'https://rksi.ru/schedule'
 
-    r_post = requests.post(url, {'group': 'ИС-34', "stt": "Показать!"})
+    r_post = requests.post(url, {'group': group, "stt": "Показать!"})
     soup = BeautifulSoup(r_post.text, features="lxml")
 
     rasp_row = soup.find('main')
@@ -73,7 +73,7 @@ def separation_text(lst, rasp_lst):
 
 
 # Пример использования функции для получения расписания группы
-group_schedule = get_group_schedule(input('Введите номер группы: ').upper())
+# group_schedule = get_group_schedule(input('Введите номер группы: ').upper())
 # for day_schedule in group_schedule:
 #     print('—' * 10)
 #     print('📅', day_schedule[0])
