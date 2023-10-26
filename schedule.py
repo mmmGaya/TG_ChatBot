@@ -70,31 +70,3 @@ def separation_text(lst, rasp_lst):
                 break
         result.append(day_schedule)
     return result
-
-
-# Пример использования функции для получения расписания группы
-# group_schedule = get_group_schedule(input('Введите номер группы: ').upper())
-# for day_schedule in group_schedule:
-#     print('—' * 10)
-#     print('📅', day_schedule[0])
-#     print('—' * 10)
-
-#     for lesson in day_schedule[1:]:
-#         print(f"⏳: {lesson['Время']}")
-#         print(f"📒: {lesson['Предмет']}")
-#         print(f"🎓: {lesson['Общность']}")
-#         print(f"🔑: {lesson['Аудитория']}", '\n')
-
-
-# Пример использования функции для получения расписания преподавателя (Каламбет В.Б.)
-# group_schedule = get_teacher_schedule(input('Введите ФИО преподавателя: ').title())
-# for day_schedule in group_schedule:
-#     print('—' * 10)
-#     print('📅', day_schedule[0])
-#     print('—' * 10)
-
-#     for lesson in day_schedule[1:]:
-#         print(f"⏳: {lesson['Время']}")
-#         print(f"📒: {lesson['Предмет']}")
-#         print(f"🎓: {lesson['Общность']}")
-#         print(f"🔑: {lesson['Аудитория']}", '\n')

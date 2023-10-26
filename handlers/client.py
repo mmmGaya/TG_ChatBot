@@ -42,13 +42,10 @@ async def show_schedule(message : types.Message, state:FSMContext):
     pattern_teacher = re.compile(r'[А-Я][а-я]+\s[А-Я]\.[А-Я]\.')
     
     if pattern_group.match(message.text):
-        
-        # response = schedule.get_groud_schedule(message.text)
         group_schedule = schedule.get_group_schedule(message.text.upper())
         for day_schedule in group_schedule:
             str = ''
             str += f"{'—' * 10}\n📅{day_schedule[0]}\n{'—' * 10}\n\n"
-            # await bot.send_message(message.from_user.id, f"{'—' * 10}\n📅{day_schedule[0]}\n{'—' * 10}\n")
             for lesson in day_schedule[1:]:
                 str += f"⏳: {lesson['Время']}\n📒: {lesson['Предмет']}\n🎓: {lesson['Общность']}\n🔑: {lesson['Аудитория']}\n\n"
             await bot.send_message(message.from_user.id, str)
