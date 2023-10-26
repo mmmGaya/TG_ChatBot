@@ -15,7 +15,7 @@ class FSMAdmin(StatesGroup):
     
 
 
-# @dp.message_handler(commands=['moderator'], is_chat_admin=True)
+@dp.message_handler(commands=['moderator'], is_chat_admin=True)
 async def check_admin(message:types.Message):
     global ID
     ID = message.from_user.id
@@ -23,7 +23,7 @@ async def check_admin(message:types.Message):
     await message.delete()
 
 
-# @dp.message_handler(commands='Изменить', state=None)
+@dp.message_handler(commands='Изменить', state=None)
 async def cm_start(message : types.Message):
     if message.from_user.id == ID:
         await FSMAdmin.group.set()
@@ -41,7 +41,7 @@ async def cancel(message:types.Message, state:FSMContext):
 
 
 
-# @dp.message_handler(state=FSMAdmin.group)
+@dp.message_handler(state=FSMAdmin.group)
 async def select_group(message : types.Message, state : FSMContext):
     if message.from_user.id == ID:
         async with state.proxy() as data:
@@ -51,7 +51,7 @@ async def select_group(message : types.Message, state : FSMContext):
 
 
 
-# @dp.message_handler(state=FSMAdmin.time)
+@dp.message_handler(state=FSMAdmin.time)
 async def inp_datatime(message : types.Message, state : FSMContext):
     if message.from_user.id == ID:
         async with state.proxy() as data:
@@ -59,18 +59,21 @@ async def inp_datatime(message : types.Message, state : FSMContext):
         await FSMAdmin.next()
         await message.reply(f'Введите сообщени для группы: ')
 
-# @dp.message_handler(state=FSMAdmin.mess)
+@dp.message_handler(state=FSMAdmin.mess)
 async def add_message(message : types.Message, state : FSMContext):
     if message.from_user.id == ID:
         async with state.proxy() as data:
             data['message'] = message.text
             all_users = create_db.select_groups(data['group'])
-            for user in all_users:
-                try:
-                    await bot.send_message(user, f'{data["time"]}\n{data["group"]}\n{data["message"]}' )
-                except:
-                    print('Произошла ошибка рассылки')
-            await message.reply("Сообщение успешно разослано ^.^")
+            if all_users:
+                for user in all_users:
+                    try:
+                        await bot.send_message(user, f'{data["time"]}\n{data["group"]}\n{data["message"]}' )
+                    except:
+                        print('Произошла ошибка рассылки')
+                await message.reply("Сообщение успешно разослано ^.^")
+            else:
+                await message.reply("Нет зарегистрированных пользователей данной группы ^.^")
         await state.finish()
 
 
