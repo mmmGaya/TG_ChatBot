@@ -49,29 +49,29 @@ from bs4 import BeautifulSoup
 url = 'https://rksi.ru/schedule'
 r_post = requests.post(url, {'group': 'ИС-13', "stt": "Показать!"})
 soup = BeautifulSoup(r_post.text, features="lxml")
-lst = [i.get_text().strip() for i in soup.find_all(['p', 'b'])[2:-1]]
+lst = [i.get_text() for i in soup.find_all(['p', 'b'])[2:-1]]
 # print([i.get_text().strip() for i in soup.find_all(['b'])])
-
+print(lst)
+# нахождение и удаление даты из списка
 words_to_check = ['понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота']
+filters_lst = [item for item in lst if any(word in item for word in words_to_check)]
+print(filters_lst)
 
-# проверка каждого элемента в списке
-filtered_lst = [item for item in lst if any(word in item for word in words_to_check)]
-
-print(filtered_lst)
-
-
+for i, d in enumerate(filters_lst):
+    lst.remove(d)
 
 # исходник списка для теста
-input_list = ['26 октября, четверг', '08:00  —  09:30МатематикаНаливайко Е.П., ауд. 322-1', 'Математика']
+# input_list = ['08:00  —  09:30МатематикаНаливайко Е.П., ауд. 322-1', 'Математика']
+for i in range(len(lst)):
+    # распределие информации
+    time = lst[i].split(lst[i+1])[0].strip()
+    obj = lst[i+1]
+    teacher = lst[i].split(lst[i+1])[1].strip().split(', ауд. ')[0]
+    aud = lst[i].split(lst[i+1])[1].strip().split(', ауд. ')[1]
+    # результат
+    print("Время:", time)
+    print("Предмет:", obj)
+    print("ФИО преподавателя:", teacher)
+    print("Аудитория:", aud)
 
-# распределие информации
-time = input_list[1].split(input_list[2])[0].strip()
-obj = input_list[2]
-teacher = input_list[1].split(input_list[2])[1].strip().split(', ауд. ')[0]
-aud = input_list[1].split(input_list[2])[1].strip().split(', ауд. ')[1]
-
-# результат
-print("Время:", time)
-print("Предмет:", obj)
-print("ФИО преподавателя:", teacher)
-print("Аудитория:", aud)
+    lst.pop(i+1)
