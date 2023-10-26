@@ -70,6 +70,7 @@ Studennikova D.A. - she is a good teacher with effective teaching methods and in
 
 Kalambet V.B. - his teaching skills and approach can be versatile, but his knowledge in programming and ability to inspire students are recognized and evaluated positively. \ $
 
+
 college offices: \
 Department is - 302kab \
 
@@ -100,8 +101,13 @@ Curriculum "Commerce (by industry)" - https://www.rksi.ru/doc/ucheba/plans/2023/
 Curriculum "Banking" - https://www.rksi.ru/doc/ucheba/plans/2023/38.02.07a.pdf?t=f1a0181401b27dd3327eb568cc926cba /
 #####  
 
-!!! Group schedule - number (example IS-24) - 
-% Please enter the command:   /Расписание_(group_number)   % !!!!
+!!!!
+Examples of statements: 
+resignation letter - https://docs.google.com/document/d/1lmH1rSdgLtZJ-hBF49S6rT2ohFZ5etR7MPNtJjNV-bY/edit/
+application for joining the trade union - https://docs.google.com/document/d/1twGwT-DFwk7nFHvGIg5Y8IAkhU6amuOedaS2HvPNifQ/edit/
+application for leave at your own expense - https://docs.google.com/document/d/1B9Ybo-1gRlOCuTVWIGOUyV8E0es8sy6rW3m_T5MemIA/edit/
+application for deduction - https://docs.google.com/document/d/1DAwp1a89SfmTbv4hjmMY5161oyz_VQcQsdLTrzKkSaE/edit /
+!!!!
 
 @
 """} ]
