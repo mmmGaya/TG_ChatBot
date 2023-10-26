@@ -4,6 +4,7 @@ from dialog_db import create_db
 from aiogram.dispatcher import FSMContext, Dispatcher
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher.filters import Text
+from keyboards import kb_admin
 
 ID = None
 
@@ -19,11 +20,11 @@ class FSMAdmin(StatesGroup):
 async def check_admin(message:types.Message):
     global ID
     ID = message.from_user.id
-    await bot.send_message(message.from_user.id, 'Вы вошли в админ-панель ^.^')
+    await bot.send_message(message.from_user.id, 'Вы вошли в админ-панель ^.^', reply_markup=kb_admin)
     await message.delete()
 
 
-@dp.message_handler(commands='Изменить', state=None)
+@dp.message_handler(commands='Написать', state=None)
 async def cm_start(message : types.Message):
     if message.from_user.id == ID:
         await FSMAdmin.group.set()
@@ -47,7 +48,7 @@ async def select_group(message : types.Message, state : FSMContext):
         async with state.proxy() as data:
             data['group'] = message.text.lower()
         await FSMAdmin.next()
-        await message.reply('Введите дату когда пара будет изменена: (Х сентября)')
+        await message.reply('Введите дату: (Х сентября)')
 
 
 
@@ -68,7 +69,7 @@ async def add_message(message : types.Message, state : FSMContext):
             if all_users:
                 for user in all_users:
                     try:
-                        await bot.send_message(user, f'{data["time"]}\n{data["group"]}\n{data["message"]}' )
+                        await bot.send_message(user, f'🕘 {data["time"].upper()}\n👨‍👩‍👦‍👦 {data["group"].upper()}\n📩 {data["message"]}' )
                     except:
                         print('Произошла ошибка рассылки')
                 await message.reply("Сообщение успешно разослано ^.^")
