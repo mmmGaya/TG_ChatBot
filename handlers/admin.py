@@ -7,19 +7,17 @@ from aiogram.dispatcher.filters import Text
 
 ID = None
 
-
 class FSMAdmin(StatesGroup):
     group = State()
     time = State()
     mess = State()
     
 
-
 @dp.message_handler(commands=['moderator'], is_chat_admin=True)
 async def check_admin(message:types.Message):
     global ID
     ID = message.from_user.id
-    await bot.send_message(message.from_user.id, 'Вы вошли в админ-панель ^.^')
+    await bot.send_message(message.from_user.id, 'Вам доступна панель администратора ^.^')
     await message.delete()
 
 
@@ -40,15 +38,13 @@ async def cancel(message:types.Message, state:FSMContext):
     await message.reply('Все ваши действия были отменены ^.^')
 
 
-
 @dp.message_handler(state=FSMAdmin.group)
 async def select_group(message : types.Message, state : FSMContext):
     if message.from_user.id == ID:
         async with state.proxy() as data:
             data['group'] = message.text.lower()
         await FSMAdmin.next()
-        await message.reply('Введите дату когда пара будет изменена: (Х сентября)')
-
+        await message.reply('Введите дату когда пара будет изменена: (XX сентября)')
 
 
 @dp.message_handler(state=FSMAdmin.time)
@@ -57,7 +53,8 @@ async def inp_datatime(message : types.Message, state : FSMContext):
         async with state.proxy() as data:
             data['time'] = message.text
         await FSMAdmin.next()
-        await message.reply(f'Введите сообщени для группы: ')
+        await message.reply(f'Введите сообщение для группы: ')
+
 
 @dp.message_handler(state=FSMAdmin.mess)
 async def add_message(message : types.Message, state : FSMContext):
@@ -71,13 +68,10 @@ async def add_message(message : types.Message, state : FSMContext):
                         await bot.send_message(user, f'{data["time"]}\n{data["group"]}\n{data["message"]}' )
                     except:
                         print('Произошла ошибка рассылки')
-                await message.reply("Сообщение успешно разослано ^.^")
+                await message.reply("Сообщение успешно отправлено ^.^")
             else:
                 await message.reply("Нет зарегистрированных пользователей данной группы ^.^")
         await state.finish()
-
-
-
 
 
 def register_handlers_admin(dp : Dispatcher):
@@ -86,6 +80,3 @@ def register_handlers_admin(dp : Dispatcher):
     dp.register_message_handler(select_group, state=FSMAdmin.group)
     dp.register_message_handler(inp_datatime, state=FSMAdmin.time)
     dp.register_message_handler(add_message, state=FSMAdmin.mess)
-
-
-    

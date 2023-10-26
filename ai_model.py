@@ -3,7 +3,6 @@ import os
 from dotenv import load_dotenv, find_dotenv
 from prompt import context
 
-
 load_dotenv(find_dotenv()) 
 
 openai.api_key  = os.getenv('OPENAI_KEY')
