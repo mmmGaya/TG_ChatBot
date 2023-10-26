@@ -46,7 +46,7 @@ async def select_group(message : types.Message, state : FSMContext):
         async with state.proxy() as data:
             data['group'] = message.text.lower()
         await FSMAdmin.next()
-        await message.reply('Введите дату когда пара будет изменена: (XX сентября)')
+        await message.reply('Введите дату: (XX сентября)')
 
 
 @dp.message_handler(state=FSMAdmin.time)

@@ -25,7 +25,7 @@ async def command_sсhedule(message : types.Message):
         await message.reply("📝Происходит регистрация. Пожалуйста, введите свою группу ^.^")
     else:
         await FSMClient.schedule.set()
-        await message.reply("Введите номер группы или ФИО преподавателя, чтобы получить расписание. Если вы вдруг передумали идти в колледже, напишите 'отмена'")
+        await message.reply("Введите номер группы или ФИО преподавателя (Например, Кравченко  И.Ю.), чтобы получить расписание. Если вы вдруг передумали идти в колледже, напишите 'отмена'")
 
 
 # @dp.message_handler(state=FSMClient.register)
@@ -38,24 +38,32 @@ async def register_user(message : types.Message, state:FSMContext):
 
 async def show_schedule(message : types.Message, state:FSMContext):
     # response = f'{message.text}'
-    pattern_group = re.compile(r'[А-Я][а-я]{2, 3}-\d{2}')
+    pattern_group = re.compile(r'\b\w{2}-\d{2}\b')
     pattern_teacher = re.compile(r'[А-Я][а-я]+\s[А-Я]\.[А-Я]\.')
     
     if pattern_group.match(message.text):
+        
         # response = schedule.get_groud_schedule(message.text)
-        group_schedule = schedule.get_groud_schedule(message.text.upper())
+        group_schedule = schedule.get_group_schedule(message.text.upper())
         for day_schedule in group_schedule:
-            f"{'—' * 10}\n📅{day_schedule[0]}\n{'—' * 10}\n"
+            str = ''
+            str += f"{'—' * 10}\n📅{day_schedule[0]}\n{'—' * 10}\n\n"
+            # await bot.send_message(message.from_user.id, f"{'—' * 10}\n📅{day_schedule[0]}\n{'—' * 10}\n")
             for lesson in day_schedule[1:]:
-                f"⏳: {lesson['Время']}\n📒: {lesson['Предмет']}\n🎓: {lesson['Общность']}\n🔑: {lesson['Аудитория']}\n"
+                str += f"⏳: {lesson['Время']}\n📒: {lesson['Предмет']}\n🎓: {lesson['Общность']}\n🔑: {lesson['Аудитория']}\n\n"
+            await bot.send_message(message.from_user.id, str)
 
     elif pattern_teacher.match(message.text):
         response = schedule.get_teacher_schedule(message.text)
+        for day_schedule in response:
+            str = ''
+            str += f"{'—' * 10}\n📅{day_schedule[0]}\n{'—' * 10}\n\n"
+            for lesson in day_schedule[1:]:
+                str += f"⏳: {lesson['Время']}\n📒: {lesson['Предмет']}\n🎓: {lesson['Общность']}\n🔑: {lesson['Аудитория']}\n\n"
+            await bot.send_message(message.from_user.id, str)
     else:
-        await bot.send_message("Вы допустили ошибку в номере группы или в ФИО преподавателя... Проверьте и попробуйте снова ^.^")
+        await bot.send_message(message.from_user.id, "Вы допустили ошибку в номере группы или в ФИО преподавателя... Проверьте и попробуйте снова ^.^")
 
-    # await bot.send_message(message.from_user.id, message.text)
-    await bot.send_message(response)
     await state.finish()  
 
 
@@ -71,9 +79,13 @@ async def cancel(message:types.Message, state:FSMContext):
     
 async def command_gpt(message : types.Message):
     await bot.send_message(message.from_user.id, '⌛️Ваш запрос обрабатывается, подождите немного ^.^ ')
-    response = collect_messages(message.text) 
-    await bot.send_message(message.from_user.id, response)   
-    await create_db.insert_data((message.from_user.username, message.text, response))
+    try :
+        response = collect_messages(message.text) 
+        await bot.send_message(message.from_user.id, response)   
+        await create_db.insert_data((message.from_user.username, message.text, response))
+    except Exception as ex:
+        await bot.send_message(message.from_user.id, 'Трафик переполнен. Пожалуйста подожди и повторно введите запрос ^.^')
+        print('Трафик переполнен')
 
 
 def register_handlers_client(dp : Dispatcher):
